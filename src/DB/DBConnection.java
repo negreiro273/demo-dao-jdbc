@@ -15,18 +15,22 @@ import java.util.Properties;
 public class DBConnection {
     
      // Configurações do banco de dados
-    //private static final String URL = "jdbc:postgresql://172.16.13.204:5432/Desenvolvimento";
-    //private static final String USUARIO = "postgres";
-   // private static final String SENHA = "S1GP4R_admin";
+   // private static final String URL = "jdbc:postgresql://172.16.13.204:5432/Desenvolvimento";
+   // private static final String USUARIO = "postgres";
+  //  private static final String SENHA = "S1GP4R_admin";
     
     private static Connection conn = null; 
     
     public static Connection getConnection() {
+        
+             
+        
 		if (conn == null) {
 			try {
-				Properties props = loadProperties();
-				String url       = props.getProperty("dburl");                                      
-				conn = DriverManager.getConnection(url,props);
+				Properties props = loadProperties();				
+                                String URL       = props.getProperty("dburl");                                      
+				conn = DriverManager.getConnection(URL,props);
+                                
 			}
 			catch (SQLException e) {
 				throw new DbException(e.getMessage());
@@ -47,10 +51,10 @@ public class DBConnection {
     
     private static Properties loadProperties() {
         
-         // O arquivo "db.properties" fica nesse caminho
+         // O arquivo "db.conection" fica nesse caminho
          // C:\Users\90913370100\Documents\NetBeansProjects\Treinamento
          
-		try (FileInputStream fs = new FileInputStream("db.properties")) {
+		try (FileInputStream fs = new FileInputStream("db.conection")) {
 			Properties props = new Properties();
 			props.load(fs);
 			return props;
