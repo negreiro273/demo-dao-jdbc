@@ -77,7 +77,45 @@ public class SellerDaoJdbc implements SellerDao{
 
     @Override
     public List<Seller> findAll() {
-        return null;
+          PreparedStatement st = null;
+          ResultSet         rs = null;
+        
+        try {
+              
+              st = conn.prepareStatement("Select Seller.*, department.name as DepName "+
+                                          "from seller "+
+                                          "Inner Join department on seller.departmentId = department.id "+
+                                           "Order by seller.name");
+        
+              rs = st.executeQuery();
+              
+              List<Seller> list = new ArrayList<>();
+              Map<Integer, Department> map = new HashMap<>();
+              
+              while(rs.next()){
+               
+               // Here you can check if the Method already exists using the Map
+               Department dp  = map.get(rs.getInt("departmentId")); 
+               // If it doesn't exist, I instantiate my Method
+               if(dp == null){
+                    dp = instantiateDepartment(rs);
+                    map.put(rs.getInt("departmentId"), dp);
+               }
+               
+               Seller obj    = instantiateSeller(rs,dp);               
+               list.add(obj);  
+               
+              }
+              
+             return list;
+            
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DBConnection.closeStatement(st);
+            DBConnection.closeResultSet(rs);
+        }
+        
     }
 
                                                            /*Propagar Sessões*/
