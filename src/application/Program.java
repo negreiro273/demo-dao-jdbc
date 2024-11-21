@@ -25,7 +25,7 @@ public class Program {
         System.out.println(seller.toString());
         
         System.out.println("==== Test 2 : findByDepartment =====");
-        Department department = new Department(2,null);
+        Department department = new Department(4,null);
         List<Seller> list = sellerDao.findByDepartment(department);
         for(Seller obj : list){System.out.println(obj);}
        /* 
@@ -33,12 +33,25 @@ public class Program {
         List<Seller> list1 = sellerDao.findAll();
         for(Seller obj : list1){System.out.println(obj);}     
         */
+       
+       
+       
         System.out.println("==== Test 4 : Insert Seller =====");  
         Seller newSeller = new Seller(null, "laura", "laura@Gmail", new Date(), 8000.00, department);
         sellerDao.insert(newSeller);
         //sellerDao.insert(new Seller(null, "Safirah", "Safirah@Gmail", new Date(), 4000.00, department));
         System.out.println(newSeller.getId()); 
+       
 
+        
+        
+        System.out.println("==== Test 4 : Update Seller =====");  
+        sellerDao.update(new Seller(12, "Maria Luiza", "LuizeNegreiro@gmail.com", new Date(), 8000.00, department));
+        
+        
+        System.out.println("==== Test 5 : Delete Seller =====");  
+        sellerDao.deleteById(12);
+        
         
     }
     

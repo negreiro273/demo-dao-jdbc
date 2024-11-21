@@ -42,10 +42,12 @@ public class SellerDaoJdbc implements SellerDao{
             st.setDouble(4, obj.getBaseSalary());
             st.setInt(5, obj.getDepartment().getId());
             
-            int rowsAffect = st.executeUpdate();
-            if(rowsAffect > 0){
+            boolean rowsAffect = st.execute();
+            if(rowsAffect == false){
                 rs = st.getGeneratedKeys();
                  if(rs.next()){
+                  //Esse Codigo pega o reigstro da primeira posição do 
+                  // st.getGeneratedKeys();
                    obj.setId(rs.getInt(1));                 
                  }
             }
@@ -54,26 +56,54 @@ public class SellerDaoJdbc implements SellerDao{
             
             throw new DbException("Error..! Unable to enter Data.."+e.getMessage());
             
-        } finally {
-            
+        } finally {            
             DBConnection.closeStatement(st);
-            DBConnection.closeResultSet(rs);
-            
+            DBConnection.closeResultSet(rs);            
         }
-        
-        
-        
-       
     }
 
     @Override
     public void update(Seller obj) {
        
+        PreparedStatement st = null;
+        
+        try {
+            
+            st = conn.prepareStatement("Update seller set name = ?,email = ?,birthdate = ?,basesalary = ?, departmentid = ? Where id = ?");
+            st.setString(1, obj.getName());
+            st.setString(2, obj.getEmail());
+            st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime())); 
+            st.setDouble(4, obj.getBaseSalary());
+            st.setInt(5,obj.getDepartment().getId());
+            st.setInt(6, obj.getId());            
+            st.execute();                       
+            
+        } catch (SQLException e) {
+            throw new DbException("Error...! Ocorreu um ERROR ao Atulaizar os Dados.." + e.getMessage());
+            
+        } finally { DBConnection.closeStatement(st); }
+        
     }
 
     @Override
     public void deleteById(Integer id) {
-       
+        PreparedStatement st = null;
+        
+        try {
+            
+            st = conn.prepareStatement("Delete from seller Where id = ?");
+            st.setInt(1, id);
+            st.execute();            
+            
+        } catch (SQLException e) {
+            
+            throw new DbException("ERROR..!! Não foi possivel excluir os dados..."+ e.getMessage());
+            
+        } finally {
+            DBConnection.closeStatement(st);
+        }
+        
+        
     }
 
     @Override
